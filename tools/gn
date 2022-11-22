@@ -394,6 +394,9 @@ def to_gn_args(args):
     if args.build_glfw_shell is not None:
       gn_args['build_glfw_shell'] = args.build_glfw_shell
 
+    if args.build_webos_embedder is not None:
+      gn_args['build_webos_embedder'] = args.build_webos_embedder
+
     if args.build_embedder_examples is not None:
       gn_args['build_embedder_examples'] = args.build_embedder_examples
 
@@ -542,6 +545,9 @@ def parse_args(args):
                       help='Build the GLFW shell on supported platforms where it is not built by default.')
   parser.add_argument('--no-build-glfw-shell', dest='build_glfw_shell', action='store_const', const=False,
                       help='Do not build the GLFW shell on platforms where it is built by default.')
+
+  parser.add_argument('--build-webos-embedder',dest='build_webos_embedder',action='store_true',default=False)
+
   parser.add_argument('--build-embedder-examples', action='store_const', const=True,
                       help='Build the example embedders using the Embedder API.')
   parser.add_argument('--no-build-embedder-examples', dest='build_embedder_examples', action='store_const', const=False,
