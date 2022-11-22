@@ -4,6 +4,7 @@
 
 import("//build/fuchsia/sdk.gni")
 import("//flutter/shell/platform/config.gni")
+import("//flutter/shell/platform/webos/config.gni")
 
 group("platform") {
   if (is_mac || is_ios) {
@@ -12,7 +13,9 @@ group("platform") {
     deps = [ "android" ]
   } else if (is_linux) {
     deps = []
-    if (enable_desktop_embeddings) {
+    if(build_webos_embedder){
+     deps += [ "webos" ]
+  } else if (enable_desktop_embeddings) {
       deps += [ "linux" ]
     }
   } else if (is_win) {
