@@ -356,6 +356,10 @@ def to_gn_args(args):
     if args.build_glfw_shell is not None:
       gn_args['build_glfw_shell'] = args.build_glfw_shell
 
+    if args.build_webos_embedder is not None:
+      gn_args['build_webos_embedder'] = args.build_webos_embedder
+
+
     gn_args['stripped_symbols'] = args.stripped
 
     if args.msan:
@@ -482,6 +486,7 @@ def parse_args(args):
   parser.add_argument('--no-build-glfw-shell', dest='build_glfw_shell', action='store_const', const=False,
                       help='Do not build the GLFW shell on platforms where it is built by default.')
 
+  parser.add_argument('--build-webos-embedder',dest='build_webos_embedder',action='store_true',default=False)
   parser.add_argument('--bitcode', default=False, action='store_true',
                       help='Enable bitcode for iOS targets. On debug runtime modes, this will be a marker only.')
 
