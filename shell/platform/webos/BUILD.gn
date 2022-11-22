@@ -1,0 +1,200 @@
+# Copyright 2014 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+
+import("//flutter/shell/platform/common/client_wrapper/publish.gni")
+import("//flutter/shell/platform/embedder/embedder.gni")
+import("//flutter/testing/testing.gni")
+
+config("webos_config"){
+
+ include_dirs = [ "$custom_sysroot/usr/include/glib-2.0/"
+,"$custom_sysroot/usr/include"
+,"$custom_sysroot/usr/include/c++/8.2.0/cstdint"
+,"$custom_sysroot/usr/include/c++/8.2.0/"
+,"$custom_sysroot/usr/include/c++/8.2.0/arm-starfishmllib32-linux-gnueabi"
+]
+
+
+  ldflags = [
+#to debug enable this flag
+# "-v",
+"-fno-implicit-templates"
+,"-Wl,-rpath-link,$custom_sysroot/usr/lib"
+,"-Wl,-rpath-link,$custom_sysroot/lib"
+,"-lluna-service2"
+,"-lmali"
+,"-lav-proxy"
+,"-lwayland-webos-client"
+,"-lwayland-egl"
+,"-lumedia_api"
+,"-lums_connector"
+,"-lums_connector_impl"
+,"-lums_connector_wrapper"
+,"-luriparser"
+,"-lluna-service2"
+,"-lcriu"
+,"-lpthread"
+,"-ldl"
+,"-lwayland-client"
+,"-lxkbcommon"
+ ]
+
+  cflags = [
+"-Wno-error"
+#to debug enable this flag
+#,"-v"
+#,"-save-temps"
+ ]
+
+  cflags_cc = [
+"-Wno-error"
+#to debug enable this flag
+#,"-v"
+#,"-save-temps"
+ ]
+
+  defines = [ "FLUTTER_WAYLAND_EMBEDDER_FOR_WEBOS"
+,"FLUTTER_WAYLAND_EMBEDDER_VKB_WEBOS"
+,"FLUTTER_WAYLAND_EMBEDDER_MEDIA_WEBOS"
+ ]
+
+}
+
+
+_webos_sources = [
+"flutter-wayland-embedder/src/audio_handler.cc"
+,"flutter-wayland-embedder/src/audio_handler.h"
+,"flutter-wayland-embedder/src/flutter_application.cc"
+,"flutter-wayland-embedder/src/flutter_application.h"
+,"flutter-wayland-embedder/src/flutter_audio_player.cc"
+,"flutter-wayland-embedder/src/flutter_audio_player.h"
+,"flutter-wayland-embedder/src/flutter_video_player.cc"
+,"flutter-wayland-embedder/src/flutter_video_player.h"
+,"flutter-wayland-embedder/src/macros.h"
+,"flutter-wayland-embedder/src/main.cc"
+,"flutter-wayland-embedder/src/path_handler.cc"
+,"flutter-wayland-embedder/src/path_handler.h"
+,"flutter-wayland-embedder/src/permission_handler.cc"
+,"flutter-wayland-embedder/src/permission_handler.h"
+,"flutter-wayland-embedder/src/platform_channel.cc"
+,"flutter-wayland-embedder/src/platform_channel.h"
+,"flutter-wayland-embedder/src/tts_handler.cc"
+,"flutter-wayland-embedder/src/tts_handler.h"
+,"flutter-wayland-embedder/src/url_launcher_handler.cc"
+,"flutter-wayland-embedder/src/url_launcher_handler.h"
+,"flutter-wayland-embedder/src/utils.cc"
+,"flutter-wayland-embedder/src/utils.h"
+,"flutter-wayland-embedder/src/wayland_display.cc"
+,"flutter-wayland-embedder/src/wayland_display.h"
+,"flutter-wayland-embedder/src/wayland_text_input.cc"
+,"flutter-wayland-embedder/src/wayland_text_input.h"
+,"flutter-wayland-embedder/src/flutter/byte_stream_wrappers.h"
+,"flutter-wayland-embedder/src/flutter/encodable_value.h"
+,"flutter-wayland-embedder/src/flutter/message_codec.h"
+,"flutter-wayland-embedder/src/flutter/method_call.h"
+,"flutter-wayland-embedder/src/flutter/method_codec.h"
+,"flutter-wayland-embedder/src/flutter/standard_codec.cc"
+,"flutter-wayland-embedder/src/flutter/standard_codec_serializer.h"
+,"flutter-wayland-embedder/src/flutter/standard_message_codec.h"
+,"flutter-wayland-embedder/src/flutter/standard_method_codec.h"]
+
+group("webos"){
+  deps = [":flutter_webos"
+          ,":libflutter_webos"]
+}
+
+
+config("embedder_rpath") {
+  ldflags = [ "-Wl,-rpath,\$ORIGIN" ]
+}
+
+source_set("flutter_engine") {
+
+  visibility = [ ":*" ]
+
+  libs = [ "flutter_engine" ]
+
+  lib_dirs = [ root_out_dir ]
+
+  public_configs = [ ":embedder_rpath" ]
+
+  deps = [ "//flutter/shell/platform/embedder:flutter_engine" ]
+
+}
+
+shared_library("libflutter_webos") {
+
+  print(configs)
+
+  print("$custom_sysroot")
+
+  configs -= [
+"//build/config:feature_flags"
+,"//build/config/compiler:compiler"
+#,"//build/config/compiler:cxx_version_default"
+#,"//build/config/compiler:compiler_arm_fpu"
+#,"//build/config/compiler:chromium_code"
+#,"//build/config/compiler:default_include_dirs"
+#,"//build/config/compiler:no_rtti"
+,"//build/config/compiler:runtime_library"
+,"//third_party/libcxxabi:libcxxabi_config"
+,"//third_party/libcxx:libcxx_config"
+,"//build/config/gcc:no_exceptions"
+,"//build/config/gcc:symbol_visibility_hidden"
+,"//build/config:symbol_visibility_hidden"
+,"//build/config/linux:sdk"
+,"//build/config/clang:extra_warnings"
+,"//build/config/clang:find_bad_constructs"
+,"//build/config:release"
+,"//build/config/compiler:optimize"
+,"//build/config/compiler:no_symbols"
+,"//build/config:default_libs"]
+
+  configs += [ ":webos_config" ]
+
+  print(configs)
+
+  sources = _webos_sources
+}
+
+
+executable("flutter_webos") {
+
+  print(configs)
+
+  print("$custom_sysroot")
+
+  configs -= [
+"//build/config:feature_flags"
+,"//build/config/compiler:compiler"
+#,"//build/config/compiler:cxx_version_default"
+#,"//build/config/compiler:compiler_arm_fpu"
+#,"//build/config/compiler:chromium_code"
+#,"//build/config/compiler:default_include_dirs"
+#,"//build/config/compiler:no_rtti"
+,"//build/config/compiler:runtime_library"
+,"//third_party/libcxxabi:libcxxabi_config"
+,"//third_party/libcxx:libcxx_config"
+,"//build/config/gcc:no_exceptions"
+,"//build/config/gcc:symbol_visibility_hidden"
+,"//build/config:symbol_visibility_hidden"
+,"//build/config/linux:sdk"
+,"//build/config/clang:extra_warnings"
+,"//build/config/clang:find_bad_constructs"
+,"//build/config:release"
+,"//build/config/compiler:optimize"
+,"//build/config/compiler:no_symbols"
+,"//build/config:default_libs"
+,"//build/config/gcc:executable_ldconfig"]
+  
+ configs += [ ":webos_config" ] 
+
+ print(configs)  
+
+ sources = _webos_sources
+
+}
+
+
