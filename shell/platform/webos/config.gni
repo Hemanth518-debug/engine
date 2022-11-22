@@ -1,0 +1,4 @@
+declare_args() {
+ # Whether to build the webos embedder.
+ build_webos_embedder = false
+}
