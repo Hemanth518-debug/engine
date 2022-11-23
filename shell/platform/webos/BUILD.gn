@@ -11,10 +11,9 @@ config("webos_config"){
 
  include_dirs = [ "$custom_sysroot/usr/include/glib-2.0/"
 ,"$custom_sysroot/usr/include"
-,"$custom_sysroot/usr/include/c++/8.2.0/cstdint"
-,"$custom_sysroot/usr/include/c++/8.2.0/"
-,"$custom_sysroot/usr/include/c++/8.2.0/arm-starfishmllib32-linux-gnueabi"
-, "//flutter/shell/platform/embedder"                 
+,"$custom_sysroot/usr/include/c++/9.3.0/cstdint"
+,"$custom_sysroot/usr/include/c++/9.3.0/"
+,"$custom_sysroot/usr/include/c++/9.3.0/arm-starfishmllib32-linux-gnueabi"
 ]
 
 
@@ -65,7 +64,8 @@ config("webos_config"){
 
 
 _webos_sources = [
-"flutter-webos-embedder/src/audio_handler.cc"
+"//flutter/shell/platform/embedder/embedder.h"
+,"flutter-webos-embedder/src/audio_handler.cc"
 ,"flutter-webos-embedder/src/audio_handler.h"
 ,"flutter-webos-embedder/src/flutter_application.cc"
 ,"flutter-webos-embedder/src/flutter_application.h"
