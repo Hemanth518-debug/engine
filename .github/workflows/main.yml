@@ -43,12 +43,8 @@ jobs:
 
       - name: gclient sync
         run: |
-          gclient config --name=src/flutter --unmanaged https://github.com/flutter-webOS/engine
-          gclient setdep --var=download_android_deps=False --deps-file=src/flutter/DEPS
-          sed -i -e '/src\/ios_tools/,+2d' src/flutter/DEPS
-          sed -i -e '/src\/third_party\/angle/,+2d' src/flutter/DEPS
-          sed -i -e '/src\/fuchsia\/sdk/,+9d' src/flutter/DEPS
-          PYTHONPATH="$PWD/depot_tools" python3 src/flutter/ci/webos/gclient-shallow-sync.py src/flutter/DEPS
+          gclient config --name=src/flutter --unmanaged 
+      
           gclient sync -v --no-history --shallow
 
       - name: verify formatting
@@ -62,17 +58,19 @@ jobs:
         run: |
           src/flutter/ci/webos/cache-checksum.sh restore src/out/$OUTPUT_NAME
 
-          src/flutter/tools/gn --target-sysroot /flutter/sysroot/o20-sysroot-for-flutter/lib32-recipe-sysroot \
+          src/flutter/tools/gn \
+           --target-os linux \
+          --target-sysroot /flutter/sysroot/o20-sysroot-for-flutter/lib32-recipe-sysroot \
           --target-toolchain /flutter/llvm-project/build/toolchain \
           --target-triple arm-starfishmllib32-linux-gnueabi \
           --linux-cpu arm \
-          --runtime-mode ${{ matrix.mode }} \ 
-          --embedder-for-target \
+          --no-goma \
+          --runtime-mode ${{ matrix.mode }} \
           --no-lto --target-os linux \ 
           --arm-float-abi softfp \
           --disable-desktop-embeddings \
-          --build-webos-embedder
-          
+          --enable-fontconfig \
+         
           ninja -C out/linux_${{ matrix.mode }}_arm -j 32
 
           if [ "${{ matrix.mode }}" != "debug" ]; then
