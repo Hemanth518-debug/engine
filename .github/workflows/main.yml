@@ -59,7 +59,6 @@ jobs:
         
           
           src/flutter/tools/gn --target-sysroot /flutter/sysroot/o20-sysroot-for-flutter/lib32-recipe-sysroot \
-          --target-os linux \
           --target-toolchain /flutter/llvm-project/build/toolchain \
           --target-triple arm-starfishmllib32-linux-gnueabi \
           --linux-cpu arm \
@@ -68,8 +67,7 @@ jobs:
           --no-lto --target-os linux \ 
           --arm-float-abi softfp \
           --disable-desktop-embeddings \
-          --build-webos-embedder
-          --target-dir linux_${{ matrix.mode }}_arm
+
           ninja -C out/linux_${{ matrix.mode }}_arm -j 32
 
           if [ "${{ matrix.mode }}" != "debug" ]; then
