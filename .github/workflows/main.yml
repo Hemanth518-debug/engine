@@ -56,6 +56,8 @@ jobs:
 
       - name: build
         run: |
+          src/flutter/ci/webos/cache-checksum.sh restore src/out/$OUTPUT_NAME
+          
           src/flutter/tools/gn --target-sysroot /flutter/sysroot/o20-sysroot-for-flutter/lib32-recipe-sysroot \
           --target-toolchain /flutter/llvm-project/build/toolchain \
           --target-triple arm-starfishmllib32-linux-gnueabi \
