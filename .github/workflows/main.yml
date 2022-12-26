@@ -56,7 +56,7 @@ jobs:
 
       - name: build
         run: |
-          src/flutter/ci/webos/cache-checksum.sh restore src/out/$OUTPUT_NAME
+        
           
           src/flutter/tools/gn --target-sysroot /flutter/sysroot/o20-sysroot-for-flutter/lib32-recipe-sysroot \
           --target-toolchain /flutter/llvm-project/build/toolchain \
@@ -70,11 +70,6 @@ jobs:
           --build-webos-embedder
           
           ninja -C out/linux_${{ matrix.mode }}_arm -j 32
-
-          if [ "${{ matrix.mode }}" != "debug" ]; then
-            ninja -C src/out/$OUTPUT_NAME clang_x64/gen_snapshot
-          fi
-
 
           if [ "${{ matrix.mode }}" != "debug" ]; then
             ninja -C src/out/$OUTPUT_NAME clang_x64/gen_snapshot
