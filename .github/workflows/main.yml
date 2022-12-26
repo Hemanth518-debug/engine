@@ -63,7 +63,6 @@ jobs:
           --target-triple arm-starfishmllib32-linux-gnueabi \
           --linux-cpu arm \
           --runtime-mode ${{ matrix.mode }} \ 
-          --embedder-for-target \
           --no-lto --target-os linux \ 
           --arm-float-abi softfp \
           --disable-desktop-embeddings \
