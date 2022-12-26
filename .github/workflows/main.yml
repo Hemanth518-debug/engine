@@ -58,7 +58,8 @@ jobs:
         run: |
         
           
-          src/flutter/tools/gn  --target-sysroot /flutter/sysroot/o20-sysroot-for-flutter/lib32-recipe-sysroot \
+        
+          src/flutter/tools/gn --target-sysroot /flutter/sysroot/o20-sysroot-for-flutter/lib32-recipe-sysroot \
           --target-toolchain /flutter/llvm-project/build/toolchain \
           --target-triple arm-starfishmllib32-linux-gnueabi \
           --linux-cpu arm \
@@ -66,6 +67,8 @@ jobs:
           --no-lto --target-os linux \ 
           --arm-float-abi softfp \
           --disable-desktop-embeddings \
+          
+
 
           ninja -C out/linux_${{ matrix.mode }}_arm -j 32
 
