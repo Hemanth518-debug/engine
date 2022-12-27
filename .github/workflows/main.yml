@@ -1,0 +1,83 @@
+
+name: Build
+
+on:
+  push:
+    branches:
+      - flutter-*-webos
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: sachinlg1282/flutter_ubuntu18.04:latest
+
+    strategy:
+      matrix:
+        arch: [arm]
+        mode: [debug, release, profile]
+        include:
+          - arch: arm
+            triple: arm-linux-gnueabi
+
+    env:
+      OUTPUT_NAME: linux_${{ matrix.mode }}_${{ matrix.arch }}
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          path: src/flutter
+          fetch-depth: 0
+
+      - uses: actions/cache@v3
+        with:
+          path: src/out/${{ env.OUTPUT_NAME }}
+          key: out-build-${{ env.OUTPUT_NAME }}-${{ github.sha }}
+          restore-keys: |
+            out-build-${{ env.OUTPUT_NAME }}-
+      - name: install depot_tools
+        run: |
+          git clone --depth=1 https://chromium.googlesource.com/chromium/tools/depot_tools.git
+          echo "$PWD/depot_tools" >> $GITHUB_PATH
+      - name: gclient sync
+        run: |
+          gclient config --name=src/flutter --unmanaged https://github.com/Hemanth518-debug/engine
+      
+          gclient sync -v --no-history --shallow
+
+      - name: verify formatting
+        if: matrix.arch == 'arm' && matrix.mode == 'release'
+        working-directory: src/flutter
+        run: |
+          git remote add upstream https://github.com/flutter/engine.git
+          ci/format.sh
+      - name: build
+        run: |
+        
+          
+        
+          src/flutter/tools/gn --target-sysroot /flutter/sysroot/o20-sysroot-for-flutter/lib32-recipe-sysroot --target-toolchain /flutter/llvm-project/build/toolchain --target-triple arm-starfishmllib32-linux-gnueabi --linux-cpu arm --runtime-mode debug --embedder-for-target --no-lto --target-os linux --arm-float-abi softfp --disable-desktop-embeddings
+          
+          if [ "${{ matrix.mode }}" != "debug" ]; then
+            ninja -C src/out/$OUTPUT_NAME clang_x64/gen_snapshot
+          fi
+      - uses: actions/upload-artifact@v3
+        with:
+          name: webos-${{ matrix.arch }}-${{ matrix.mode }}
+          path: src/out/${{ env.OUTPUT_NAME }}/libflutter_*.so
+          if-no-files-found: error
+
+      - uses: actions/upload-artifact@v3
+        if: github.event_name == 'push'
+        with:
+          name: webos-${{ matrix.arch }}-${{ matrix.mode }}_symbols
+          path: src/out/${{ env.OUTPUT_NAME }}/so.unstripped/libflutter_*.so
+          if-no-files-found: error
+
+      - uses: actions/upload-artifact@v3
+        if: matrix.mode != 'debug'
+        with:
+          name: webos-${{ matrix.arch }}-${{ matrix.mode }}_linux-x64
+          path: src/out/${{ env.OUTPUT_NAME }}/clang_x64/gen_snapshot
+          if-no-files-found: error
