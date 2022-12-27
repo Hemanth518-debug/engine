@@ -57,7 +57,7 @@ jobs:
         
           
         
-          src/flutter/tools/gn --target-sysroot /flutter/sysroot/o20-sysroot-for-flutter/lib32-recipe-sysroot --target-toolchain /flutter/llvm-project/build/toolchain --target-triple arm-starfishmllib32-linux-gnueabi --linux-cpu arm --runtime-mode debug --embedder-for-target --no-lto --target-os linux --arm-float-abi softfp --disable-desktop-embeddings
+          src/flutter/tools/gn --no-goma --target-sysroot /flutter/sysroot/o20-sysroot-for-flutter/lib32-recipe-sysroot --target-toolchain /flutter/llvm-project/build/toolchain --target-triple arm-starfishmllib32-linux-gnueabi --linux-cpu arm --runtime-mode debug --embedder-for-target --no-lto --target-os linux --arm-float-abi softfp --disable-desktop-embeddings
           
           if [ "${{ matrix.mode }}" != "debug" ]; then
             ninja -C src/out/$OUTPUT_NAME clang_x64/gen_snapshot
