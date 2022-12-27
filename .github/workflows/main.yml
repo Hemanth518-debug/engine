@@ -53,7 +53,7 @@ jobs:
         run: |
           echo "beforegn"
           echo "$PWD"
-          src/flutter/tools/gn --target-sysroot /flutter/sysroot/O20_SDK_webOS_403/lib32-recipe-sysroot --target-toolchain /flutter/llvm-project/build/toolchain --target-triple arm-starfishmllib32-linux-gnueabi --linux-cpu arm --runtime-mode debug --embedder-for-target --no-lto --target-os linux --arm-float-abi softfp --no-goma --disable-desktop-embeddings
+          src/flutter/tools/gn --target-sysroot /flutter/sysroot/O20_SDK_webOS_403/lib32-recipe-sysroot --target-toolchain /flutter/llvm-project/build/toolchain --target-triple arm-starfishmllib32-linux-gnueabi --linux-cpu arm --runtime-mode debug --embedder-for-target --no-lto --target-os linux --arm-float-abi softfp --disable-desktop-embeddings
           echo "aftergn"
           ninja -C out/linux_debug_arm -j 32
           echo "afterninja"
