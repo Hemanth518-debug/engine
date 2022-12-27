@@ -53,7 +53,7 @@ jobs:
         run: |
           echo "beforegn"
           echo "$PWD"
-          cd /flutter
+          cd /flutter/sysroot
           echo "$PWD"
           cd -
           src/flutter/tools/gn --target-sysroot /flutter/sysroot/O20_SDK_webOS_403/lib32-recipe-sysroot --target-toolchain /flutter/toolchain-version-2 --target-triple arm-starfishmllib32-linux-gnueabi --linux-cpu arm --runtime-mode debug --embedder-for-target --no-lto --target-os linux --arm-float-abi softfp --disable-desktop-embeddings
