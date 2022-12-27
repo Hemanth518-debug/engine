@@ -56,7 +56,7 @@ jobs:
       - name: build
         run: |
         
-          export PKG_CONFIG_PATH=/flutter/sysroot/O20_SDK_webOS_403/lib32-recipe-sysroot/usr/lib/pkgconfig:$PKG_CONFIG_PATH
+          
           
           echo "beforegn"
           
