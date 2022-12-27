@@ -16,7 +16,7 @@ jobs:
     strategy:
       matrix:
         arch: [arm]
-        mode: [debug, release, profile]
+        mode: [debug]
         include:
           - arch: arm
             triple: arm-linux-gnueabi
@@ -30,17 +30,8 @@ jobs:
           path: src/flutter
           fetch-depth: 0
 
-      - uses: actions/cache@v3
-        with:
-          path: src/out/${{ env.OUTPUT_NAME }}
-          key: out-build-${{ env.OUTPUT_NAME }}-${{ github.sha }}
-          restore-keys: |
-            out-build-${{ env.OUTPUT_NAME }}-
-      - name: install depot_tools
-        run: |
-          git clone --depth=1 https://chromium.googlesource.com/chromium/tools/depot_tools.git
-          echo "$PWD/depot_tools" >> $GITHUB_PATH
-          echo "done"
+      
+      
       - name: gclient sync
         run: |
           gclient config --name=src/flutter --unmanaged https://github.com/Hemanth518-debug/engine
@@ -52,23 +43,16 @@ jobs:
         working-directory: src/flutter
         run: |
           git remote add upstream https://github.com/flutter/engine.git
+          gclient sync -D
           ci/format.sh
       - name: build
         run: |
-        
-          
-          
           echo "beforegn"
-          
-          src/flutter/tools/gn --target-sysroot /flutter/sysroot/o20-sysroot-for-flutter/lib32-recipe-sysroot --target-toolchain /flutter/llvm-project/build/toolchain --target-triple arm-starfishmllib32-linux-gnueabi --linux-cpu arm --runtime-mode debug --embedder-for-target --no-lto --target-os linux --arm-float-abi softfp --no-goma --disable-desktop-embeddings
-          
+          ls -la /flutter/sysroot/O20_SDK_webOS_403/
+          src/flutter/tools/gn --target-sysroot /flutter/sysroot/O20_SDK_webOS_403/lib32-recipe-sysroot --target-toolchain /flutter/llvm-project/build/toolchain --target-triple arm-starfishmllib32-linux-gnueabi --linux-cpu arm --runtime-mode debug --embedder-for-target --no-lto --target-os linux --arm-float-abi softfp --no-goma --disable-desktop-embeddings
           echo "aftergn"
-          
-          
           ninja -C out/linux_debug_arm -j 32
-          
           echo "afterninja"
-          
           if [ "${{ matrix.mode }}" != "debug" ]; then
             ninja -C src/out/$OUTPUT_NAME clang_x64/gen_snapshot
           fi
