@@ -54,7 +54,27 @@ jobs:
           echo "beforegn"
           src/flutter/tools/gn --target-sysroot /flutter/sysroot/o20-sysroot-for-flutter/lib32-recipe-sysroot --target-toolchain /flutter/toolchain-version-2 --target-triple arm-starfishmllib32-linux-gnueabi --linux-cpu arm --runtime-mode debug --embedder-for-target --no-lto --target-os linux --arm-float-abi softfp --disable-desktop-embeddings
           echo "aftergn"
-          ninja -C out/linux_debug_arm -j 32
+          ninja -C src/out/linux_debug_arm -j 32
           echo "afterninja"
          
+      - uses: actions/upload-artifact@v3
+        with:
+          name: webos-${{ matrix.arch }}-${{ matrix.mode }}
+          path: src/out/${{ env.OUTPUT_NAME }}/libflutter_*.so
+          if-no-files-found: error
+
+      - uses: actions/upload-artifact@v3
+        if: github.event_name == 'push'
+        with:
+          name: webos-${{ matrix.arch }}-${{ matrix.mode }}_symbols
+          path: src/out/${{ env.OUTPUT_NAME }}/so.unstripped/libflutter_*.so
+          if-no-files-found: error
+
+      - uses: actions/upload-artifact@v3
+        if: matrix.mode != 'debug'
+        with:
+          name: webos-${{ matrix.arch }}-${{ matrix.mode }}_linux-x64
+          path: src/out/${{ env.OUTPUT_NAME }}/clang_x64/gen_snapshot
+          if-no-files-found: error
+
      
