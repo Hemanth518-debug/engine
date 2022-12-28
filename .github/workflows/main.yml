@@ -11,7 +11,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: sachinlg1282/flutter_ubuntu18.04:latestwitsysroot
+      image: sachinlg1282/flutter_ubuntu18.04:latest
 
     strategy:
       matrix:
