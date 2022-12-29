@@ -16,7 +16,7 @@ jobs:
     strategy:
       matrix:
         arch: [arm]
-        mode: [debug]
+        mode: [release]
         include:
           - arch: arm
             triple: arm-linux-gnueabi
