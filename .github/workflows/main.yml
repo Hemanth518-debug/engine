@@ -47,11 +47,12 @@ jobs:
         working-directory: src/flutter
         run: |
           git remote add upstream https://github.com/flutter/engine.git
+          git checkout flutter-2.8.1-webos
           gclient sync -D
           ci/format.sh
       - name: build
         run: |
-          git checkout flutter-2.8.1-webos
+        
           echo "beforegn"
           src/flutter/tools/gn --target-sysroot /flutter/sysroot/o20-sysroot-for-flutter/lib32-recipe-sysroot --target-toolchain /flutter/llvm-project/build/toolchain --target-triple arm-starfishmllib32-linux-gnueabi --linux-cpu arm --runtime-mode release --embedder-for-target --no-lto --target-os linux --arm-float-abi softfp --disable-desktop-embeddings
           echo "aftergn"
