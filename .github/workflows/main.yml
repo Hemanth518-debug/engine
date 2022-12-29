@@ -47,7 +47,8 @@ jobs:
         working-directory: src/flutter
         run: |
           git remote add upstream https://github.com/flutter/engine.git
-          git checkout flutter-2.8.1-webos
+          git checkout 2.13-candidate.0
+          git reset --hard 890a5fca2e
           gclient sync -D
           ci/format.sh
       - name: build
