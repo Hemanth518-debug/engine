@@ -38,7 +38,7 @@ jobs:
       
       - name: gclient sync
         run: |
-          gclient config --name=src/flutter --unmanaged https://github.com/Hemanth518-debug/engine
+          gclient config --name=src/flutter --unmanaged https://github.com/flutter/engine.git
       
           gclient sync -v --no-history --shallow
 
@@ -46,7 +46,7 @@ jobs:
         if: matrix.arch == 'arm' && matrix.mode == 'release'
         working-directory: src/flutter
         run: |
-          git remote add upstream https://github.com/Hemanth518-debug/engine
+          git remote add upstream git@github.com:flutter/engine.git
           git pull upstream main
           gclient sync
           git checkout flutter-2.8-candidate.3
