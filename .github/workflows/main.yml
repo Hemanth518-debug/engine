@@ -45,14 +45,15 @@ jobs:
         if: matrix.arch == 'arm' && matrix.mode == 'release'
         working-directory: src/flutter
         run: |
-          git remote add upstream https://github.com/flutter/engine.git
-          git pull upstream main
-          git reset --hard 890a5fca2e
-          gclient sync -D
+          git remote rename origin upstream
+          git remote add origin https://github.com/flutter-webOS/engine.git
+          git fetch origin
+          git checkout flutter-3.0.5-webos
           ci/format.sh
-      - name: verify formatting 
-        working-directory: src/flutter
+      - name: verify formatting2 
+        working-directory: src
         run: |
+           gclient sync -D
       - name: build
         run: |
         
