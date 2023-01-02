@@ -11,7 +11,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: hemanth2808/new_image2:withsysandold
+      image: hemanth2808/hemanth_image:withsysandtool
 
     strategy:
       matrix:
@@ -25,37 +25,50 @@ jobs:
       OUTPUT_NAME: linux_${{ matrix.mode }}_${{ matrix.arch }}
 
     steps:
-      - uses: actions/checkout@v3
-        with:
+     
+    - uses: easimon/maximize-build-space@master
+      with:
+        root-reserve-mb: 1024
+          
+        temp-reserve-mb: 100
+        swap-size-mb: 4096
+         
+        
+        remove-dotnet: false
+        remove-android: false
+       
+       
+    - uses: actions/checkout@v3
+      with:
           path: src/flutter
           fetch-depth: 0
-      - name: install depot_tools
-        run: |
+    - name: install depot_tools
+      run: |
           git clone --depth=1 https://chromium.googlesource.com/chromium/tools/depot_tools.git
           echo "$PWD/depot_tools" >> $GITHUB_PATH
 
       
       
-      - name: gclient sync
-        run: |
+    - name: gclient sync
+      run: |
           gclient config --name=src/flutter --unmanaged https://github.com/Hemanth518-debug/engine      
           gclient sync  -v --no-history --shallow
 
-      - name: verify formatting
-        if: matrix.arch == 'arm' && matrix.mode == 'release'
-        working-directory: src/flutter
-        run: |
+    - name: verify formatting
+      if: matrix.arch == 'arm' && matrix.mode == 'release'
+      working-directory: src/flutter
+      run: |
           git remote rename origin upstream
           git remote add origin https://github.com/flutter-webOS/engine.git
           git fetch origin
           git checkout flutter-3.0.5-webos
           ci/format.sh
-      - name: verify formatting2 
-        working-directory: src
-        run: |
+    - name: verify formatting2 
+      working-directory: src
+      run: |
            gclient sync -D
-      - name: build
-        run: |
+    - name: build
+      run: |
         
           echo "beforegn"
           src/flutter/tools/gn --target-sysroot /flutter/sysroot/o20-sysroot-for-flutter/lib32-recipe-sysroot --target-toolchain /flutter/llvm-project/build/toolchain --target-triple arm-starfishmllib32-linux-gnueabi --linux-cpu arm --runtime-mode release --embedder-for-target --no-lto --target-os linux --arm-float-abi softfp --disable-desktop-embeddings
@@ -63,22 +76,22 @@ jobs:
           ninja -C src/out/linux_release_arm -j 32
           echo "afterninja"
          
-      - uses: actions/upload-artifact@v3
-        with:
+    - uses: actions/upload-artifact@v3
+      with:
           name: webos-${{ matrix.arch }}-${{ matrix.mode }}
           path: src/out/${{ env.OUTPUT_NAME }}/libflutter_*.so
           if-no-files-found: error
 
-      - uses: actions/upload-artifact@v3
-        if: github.event_name == 'push'
-        with:
+    - uses: actions/upload-artifact@v3
+      if: github.event_name == 'push'
+      with:
           name: webos-${{ matrix.arch }}-${{ matrix.mode }}_symbols
           path: src/out/${{ env.OUTPUT_NAME }}/so.unstripped/libflutter_*.so
           if-no-files-found: error
 
-      - uses: actions/upload-artifact@v3
-        if: matrix.mode != 'debug'
-        with:
+    - uses: actions/upload-artifact@v3
+      if: matrix.mode != 'debug'
+      with:
           name: webos-${{ matrix.arch }}-${{ matrix.mode }}_linux-x64
           path: src/out/${{ env.OUTPUT_NAME }}/clang_x64/gen_snapshot
           if-no-files-found: error
