@@ -47,8 +47,11 @@ jobs:
         run: |
           git remote add upstream https://github.com/flutter/engine.git
           git pull upstream main
-          gclient sync
-          git checkout flutter-2.8-candidate.3
+      - name: verify formatting 
+        working-directory: src
+        run: |
+          mv flutter flutter_working
+          git clone https://github.com/flutter/engine.git  -b flutter-2.8-candidate.3
           git reset --hard 890a5fca2e
           gclient sync -D
           ci/format.sh
