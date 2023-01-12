@@ -34,6 +34,7 @@ jobs:
           fetch-depth: 0
     - name: install depot_tools
       run: |
+          echo ${{ github.ref_name }}
           git clone --depth=1 https://chromium.googlesource.com/chromium/tools/depot_tools.git
           echo "$PWD/depot_tools" >> $GITHUB_PATH
 
@@ -41,7 +42,7 @@ jobs:
       
     - name: gclient sync
       run: |
-          echo "$github.head_ref"
+         
           gclient config --name=src/flutter --unmanaged https://github.com/Hemanth518-debug/engine      
           gclient sync  -v --no-history --shallow
 
