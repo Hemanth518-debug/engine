@@ -57,10 +57,9 @@ jobs:
       if: matrix.arch == 'arm' && matrix.mode == 'release'
       working-directory: src/flutter
       run: |
-          git remote rename origin upstream
+          
           git remote add origin https://github.com/flutter-webOS/engine.git
-          git fetch origin
-          git checkout flutter-3.0.5-webos
+          
           ci/format.sh
     - name: verify formatting2 
       working-directory: src
