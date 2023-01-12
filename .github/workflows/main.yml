@@ -29,9 +29,7 @@ jobs:
      
     - name: free disk space
       run: |
-        swapoff -a
-        rm -f /swapfile
-        apt clean
+     
         docker rmi $(docker image ls -aq)
         df -h       
        
