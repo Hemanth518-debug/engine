@@ -10,6 +10,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    
     container:
       image: hemanth2808/new_image2:withsysandold
 
@@ -26,7 +27,13 @@ jobs:
 
     steps:
      
-           
+    - name: free disk space
+      run: |
+        sudo swapoff -a
+        sudo rm -f /swapfile
+        sudo apt clean
+        docker rmi $(docker image ls -aq)
+        df -h       
        
     - uses: actions/checkout@v3
       with:
