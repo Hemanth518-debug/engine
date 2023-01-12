@@ -41,7 +41,7 @@ jobs:
       
     - name: gclient sync
       run: |
-          echo github.head_ref
+          echo "$github.head_ref"
           gclient config --name=src/flutter --unmanaged https://github.com/Hemanth518-debug/engine      
           gclient sync  -v --no-history --shallow
 
