@@ -28,7 +28,7 @@ jobs:
     steps:
      
     - name: Free Disk Space (Ubuntu)
-      uses: ctions/checkout@v2
+      uses: actions/checkout@v2
       with:
        
         tool-cache: true
